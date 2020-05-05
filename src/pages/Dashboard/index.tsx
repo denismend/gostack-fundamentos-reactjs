@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { parseISO, format } from 'date-fns';
+
+import api from '../../services/api';
+import Header from '../../components/Header';
+import formatValue from '../../utils/formatValue';
 
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
 import total from '../../assets/total.svg';
-
-import api from '../../services/api';
-
-import Header from '../../components/Header';
-
-import formatValue from '../../utils/formatValue';
 
 import { Container, CardContainer, Card, TableContainer } from './styles';
 
@@ -36,7 +35,18 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     async function loadTransactions(): Promise<void> {
       api.get('transactions').then(response => {
-        setTransactions(response.data.transactions);
+        setTransactions(
+          response.data.transactions.map((transaction: Transaction) => {
+            return {
+              ...transaction,
+              formattedValue: formatValue(transaction.value),
+              formattedDate: format(
+                parseISO(`${transaction.created_at}`),
+                'dd/MM/yyyy',
+              ),
+            };
+          }),
+        );
         setBalance(response.data.balance);
       });
     }
@@ -94,9 +104,12 @@ const Dashboard: React.FC = () => {
                 {transactions.map(transaction => (
                   <tr>
                     <td className="title">{transaction.title}</td>
-                    <td className="income">{formatValue(transaction.value)}</td>
+                    <td className={transaction.type}>
+                      {transaction.type === 'outcome' && '- '}
+                      {transaction.formattedValue}
+                    </td>
                     <td>{transaction.category.title}</td>
-                    <td>20/04/2020</td>
+                    <td>{transaction.formattedDate}</td>
                   </tr>
                 ))}
               </tbody>

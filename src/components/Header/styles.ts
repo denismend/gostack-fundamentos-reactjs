@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
+import moneyBackground from '../../assets/money.png';
+
 interface ContainerProps {
   size?: 'small' | 'large';
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: #5636d3;
+  background: #5636d3 url(${moneyBackground}) no-repeat 70% top;
   padding: 30px 0;
 
   header {
@@ -30,6 +32,12 @@ export const Container = styled.div<ContainerProps>`
         &:hover {
           opacity: 0.6;
         }
+      }
+
+      a.active {
+        color: #ff872c;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ff872c;
       }
     }
   }

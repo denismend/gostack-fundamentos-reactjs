@@ -41,6 +41,18 @@ export const Footer = styled.section`
     }
   }
 
+  p#errors {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    line-height: 18px;
+    color: #f00;
+
+    img {
+      margin-right: 5px;
+    }
+  }
+
   button {
     background: #ff872c;
     color: #fff;
